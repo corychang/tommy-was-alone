@@ -4,6 +4,8 @@ using UnityEngine;
 using System.Collections;
 
 public class BehaviorScript : MonoBehaviour {
+	/*
+	 * Missing LevelConfigurationScript.cs Add this file before uncommenting
 	// Constant variables
 	public const float ACCELERATION = 40.0f;
 	public const float CHARACTER_WIDTH = 5.0f;
@@ -175,4 +177,5 @@ public class BehaviorScript : MonoBehaviour {
 			return flock(c);
 		}
 	}
+	*/
 }
