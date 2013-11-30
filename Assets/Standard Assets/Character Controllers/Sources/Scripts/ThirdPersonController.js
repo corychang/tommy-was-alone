@@ -54,11 +54,11 @@ private var groundedTimeout = 0.25;
 private var lockCameraTimer = 0.0;
 
 // The current move direction in x-z
-private var moveDirection = Vector3.zero;
+public var moveDirection = Vector3.zero;
 // The current vertical speed
 private var verticalSpeed = 0.0;
 // The current x-z move speed
-private var moveSpeed = 0.0;
+public var moveSpeed = 0.0;
 
 // The last collision flags returned from controller.Move
 private var collisionFlags : CollisionFlags; 

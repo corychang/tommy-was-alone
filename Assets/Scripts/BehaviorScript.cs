@@ -4,8 +4,6 @@ using UnityEngine;
 using System.Collections;
 
 public class BehaviorScript : MonoBehaviour {
-	/*
-	 * Missing LevelConfigurationScript.cs Add this file before uncommenting
 	// Constant variables
 	public const float ACCELERATION = 40.0f;
 	public const float CHARACTER_WIDTH = 5.0f;
@@ -24,8 +22,6 @@ public class BehaviorScript : MonoBehaviour {
 	
 	// Public variables
 	public GameObject goalRef = null;
-	public LevelConfigurationScript.Scene desiredScene;
-	public LevelConfigurationScript levelConfig = null;
 	public ThirdPersonController leaderController = null;
 	public ThirdPersonController[] allChars = null;
 	public float maxSpeed = 0.0f;
@@ -38,6 +34,7 @@ public class BehaviorScript : MonoBehaviour {
 		Vector3 acc1 = ComputeDesiredVelocity(c);
 		Vector3 acc2 = ComputeDesiredVelocity(c);
 		Vector3 acc = (acc1 + acc2) / 2.0f;
+		/*
 		if (desiredScene == LevelConfigurationScript.Scene.ReachGoal) {
 			Vector3 displacement = goalRef.transform.position - c.transform.position;
 			if (displacement.magnitude < 25.0f) {
@@ -54,11 +51,13 @@ public class BehaviorScript : MonoBehaviour {
 			c.moveSpeed = newVelocity.magnitude;
 			c.SetDirection(newVelocity.normalized);
 		}
+		*/
 	}
 	
 	// Return the seek acceleration.
 	public Vector3 ComputeDesiredVelocity(ThirdPersonController c) {
-		oldDirections[c.characterNumber-1] = c.GetDirection();
+		/*
+		 oldDirections[c.characterNumber-1] = c.GetDirection();
 		Vector3 acc;
 		switch (desiredScene) {
 			case LevelConfigurationScript.Scene.Wander:
@@ -83,6 +82,8 @@ public class BehaviorScript : MonoBehaviour {
 		acc += FLEE_OBJECT_WEIGHT * fleeObjs + FLEE_CHARACTERS_WEIGHT * fleeChars;
 		// Prevent accelerations from getting too large.
 		return Mathf.Min(acc.magnitude, ACCELERATION) * acc.normalized;
+		*/
+		return Vector3.zero;
 	}
 	
 	// Push characters away from obstacles.
@@ -104,6 +105,7 @@ public class BehaviorScript : MonoBehaviour {
 	// Apply separations on all characters.
 	public Vector3 fleeCharacters(ThirdPersonController c) {
 		Vector3 sum = Vector3.zero;
+		/*
 		for (int i = 0; i < allChars.Length; i++) {
 			// Skip comparisons of characters with themselves.
 			if (c != allChars[i]) {
@@ -119,6 +121,7 @@ public class BehaviorScript : MonoBehaviour {
 				}
 			}
 		}
+		*/
 		return sum;
 	}
 	
@@ -177,5 +180,4 @@ public class BehaviorScript : MonoBehaviour {
 			return flock(c);
 		}
 	}
-	*/
 }
