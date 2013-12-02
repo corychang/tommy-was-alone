@@ -24,7 +24,8 @@ public class BehaviorScript : MonoBehaviour {
 	public GameObject goalRef = null;
 	public ThirdPersonController leaderController = null;
 	public ThirdPersonController[] allChars = null;
-	public float maxSpeed = 0.0f;
+	public float maxSpeed = 20.0f;
+	public int characterNumber = 1;
 	
 	// Private variables
 	private Vector3[] oldDirections = new Vector3[10];
@@ -34,14 +35,7 @@ public class BehaviorScript : MonoBehaviour {
 		Vector3 acc1 = ComputeDesiredVelocity(c);
 		Vector3 acc2 = ComputeDesiredVelocity(c);
 		Vector3 acc = (acc1 + acc2) / 2.0f;
-		/*
-		if (desiredScene == LevelConfigurationScript.Scene.ReachGoal) {
-			Vector3 displacement = goalRef.transform.position - c.transform.position;
-			if (displacement.magnitude < 25.0f) {
-				acc = Vector3.zero;
-				c.moveSpeed = 0;
-			}
-		}
+
 		if (!acc.Equals(Vector3.zero)) {
 			// v = v0 + at
 			Vector3 newVelocity = c.moveSpeed * c.GetDirection() + acc * Time.deltaTime;
@@ -51,14 +45,14 @@ public class BehaviorScript : MonoBehaviour {
 			c.moveSpeed = newVelocity.magnitude;
 			c.SetDirection(newVelocity.normalized);
 		}
-		*/
 	}
 	
 	// Return the seek acceleration.
 	public Vector3 ComputeDesiredVelocity(ThirdPersonController c) {
+		// TODO: This is not the right index right now.
+		oldDirections[characterNumber-1] = c.GetDirection();
+		Vector3 acc = behaviorWander(c);
 		/*
-		 oldDirections[c.characterNumber-1] = c.GetDirection();
-		Vector3 acc;
 		switch (desiredScene) {
 			case LevelConfigurationScript.Scene.Wander:
 				acc = behaviorWander(c);
@@ -76,14 +70,14 @@ public class BehaviorScript : MonoBehaviour {
 				acc = new Vector3(0,0,0);
 				break;
 		}
+		*/
 		Vector3 fleeObjs = fleeObjects(c, acc);
 		// Flocking already accounts for separation.
-		Vector3 fleeChars = desiredScene == LevelConfigurationScript.Scene.FlockingWander ? Vector3.zero : fleeCharacters(c);
-		acc += FLEE_OBJECT_WEIGHT * fleeObjs + FLEE_CHARACTERS_WEIGHT * fleeChars;
+		//Vector3 fleeChars = desiredScene == LevelConfigurationScript.Scene.FlockingWander ? Vector3.zero : fleeCharacters(c);
+		//acc += FLEE_OBJECT_WEIGHT * fleeObjs + FLEE_CHARACTERS_WEIGHT * fleeChars;
+		acc += FLEE_OBJECT_WEIGHT * fleeObjs;
 		// Prevent accelerations from getting too large.
 		return Mathf.Min(acc.magnitude, ACCELERATION) * acc.normalized;
-		*/
-		return Vector3.zero;
 	}
 	
 	// Push characters away from obstacles.
