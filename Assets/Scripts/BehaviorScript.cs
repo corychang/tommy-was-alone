@@ -6,7 +6,7 @@ using System.Collections;
 public class BehaviorScript : MonoBehaviour {
 	// Constant variables
 	public const float ACCELERATION = 40.0f;
-	public const float CHARACTER_WIDTH = 5.0f;
+	public const float CHARACTER_WIDTH = 1.0f;
 	public const float FLEE_CHARACTERS_WEIGHT = 20.0f;
 	public const float FLEE_OBJECT_MAX_DISTANCE = 60.0f;
 	public const float FLEE_OBJECT_SCALE = 1600.0f;
