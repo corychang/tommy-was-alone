@@ -17,7 +17,7 @@ public class BehaviorScript : MonoBehaviour {
 	public const float PROPORTION = 0.1f;
 	public const float REACH_GOAL_SLOWING_DISTANCE = 50.0f;
 	public const float WANDER_CIRCLE_DISTANCE = 60.0f;
-	public const float WANDER_CIRCLE_RADIUS = 50.0f;
+	public const float WANDER_CIRCLE_RADIUS = 30.0f;
 	public const float WANDER_CIRCLE_SCALE = 40.0f;
 	
 	// Public variables
@@ -25,10 +25,11 @@ public class BehaviorScript : MonoBehaviour {
 	public ThirdPersonController leaderController = null;
 	public ThirdPersonController[] allChars = null;
 	public float maxSpeed = 20.0f;
-	public int characterNumber = 1;
+	//public int characterNumber = 1;
 	
 	// Private variables
-	private Vector3[] oldDirections = new Vector3[10];
+	// TODO: Set this based on the number of characters on the screen.
+	private Vector3[] oldDirections = new Vector3[1];
 	
 	public void UpdateDesiredVelocity(ThirdPersonController c) {
 		// Run twice to reduce jittering.
@@ -50,7 +51,7 @@ public class BehaviorScript : MonoBehaviour {
 	// Return the seek acceleration.
 	public Vector3 ComputeDesiredVelocity(ThirdPersonController c) {
 		// TODO: This is not the right index right now.
-		oldDirections[characterNumber-1] = c.GetDirection();
+		oldDirections[c.characterNumber] = c.GetDirection();
 		Vector3 acc = behaviorWander(c);
 		/*
 		switch (desiredScene) {
@@ -99,13 +100,14 @@ public class BehaviorScript : MonoBehaviour {
 	// Apply separations on all characters.
 	public Vector3 fleeCharacters(ThirdPersonController c) {
 		Vector3 sum = Vector3.zero;
-		/*
+		if (allChars == null)
+			return sum;
 		for (int i = 0; i < allChars.Length; i++) {
 			// Skip comparisons of characters with themselves.
 			if (c != allChars[i]) {
 				// Compute time when characters are closest.
 				Vector3 dp = allChars[i].transform.position - c.transform.position;
-				Vector3 dv = oldDirections[i] - oldDirections[c.characterNumber-1];
+				Vector3 dv = oldDirections[i] - oldDirections[c.characterNumber];
 				float t = -Vector3.Dot(dp, dv) / Vector3.Dot(dv, dv);
 				// Only flee for small t.
 				if (t > 0.0f && t < MAX_TIME) {
@@ -115,7 +117,6 @@ public class BehaviorScript : MonoBehaviour {
 				}
 			}
 		}
-		*/
 		return sum;
 	}
 	
@@ -128,7 +129,8 @@ public class BehaviorScript : MonoBehaviour {
 		float circX = WANDER_CIRCLE_RADIUS * Mathf.Cos(orientation);
 		float circZ = WANDER_CIRCLE_RADIUS * Mathf.Sin(orientation);
 		Vector3 goal = new Vector3(circleCenter.x + circX, circleCenter.y, circleCenter.z + circZ);
-		return WANDER_CIRCLE_SCALE * behaviorSeek(c, goal).normalized;
+		//return WANDER_CIRCLE_SCALE * behaviorSeek(c, goal).normalized;
+		return WANDER_CIRCLE_SCALE * behaviorReachGoal(c, goal).normalized;
 	}
 	
 	// Seek steering behavior. Used by wander.
