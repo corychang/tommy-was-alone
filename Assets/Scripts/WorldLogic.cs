@@ -15,36 +15,59 @@ public class WorldLogic : MonoBehaviour {
 	// then we rotate the cube by 90 degrees and shift the player
 	void Update () {
 		Vector3 temp_pos = transform.position;
-		bool cube_rotated = false;
+		int rotateCase = -1;
 		if(player.transform.position.x < transform.position.x - transform.lossyScale.x/2.0f)
 		{
 			this.transform.Rotate(new Vector3(0.0f,0.0f,-90.0f));
-			temp_pos.x -= (transform.localScale.x - EPSILON);
-			cube_rotated = true;
+			//temp_pos.x -= (transform.localScale.x - EPSILON);
+			temp_pos.x -= transform.localScale.x;
+			rotateCase = 0;
 		}
 		else if(player.transform.position.x > transform.position.x + transform.lossyScale.x/2.0f)
 		{
 			this.transform.Rotate(new Vector3(0.0f,0.0f,90.0f));
-			temp_pos.x += (transform.localScale.x - EPSILON);
-			cube_rotated = true;
+			//temp_pos.x += (transform.localScale.x - EPSILON);
+			temp_pos.x += transform.localScale.x;
+			rotateCase = 1;
 		}
 		else if(player.transform.position.z < transform.position.z - transform.lossyScale.z/2.0f)
 		{
 			this.transform.Rotate(new Vector3(90.0f,0.0f,0.0f));
-			temp_pos.z -= (transform.localScale.z - EPSILON);
-			cube_rotated = true;
+			//temp_pos.z -= (transform.localScale.z - EPSILON);
+			temp_pos.z -= transform.localScale.z;
+			rotateCase = 2;
 		}
 		else if(player.transform.position.z > transform.position.z + transform.lossyScale.z/2.0f)
 		{
 			this.transform.Rotate(new Vector3(-90.0f,0.0f,0.0f));
-			temp_pos.z += (transform.localScale.z - EPSILON);
-			cube_rotated = true;
+			//temp_pos.z += (transform.localScale.z - EPSILON);
+			temp_pos.z += transform.localScale.z;
+			rotateCase = 3;
 		}
-		if(cube_rotated)
+		if(rotateCase != -1)
 		{
 			player.transform.position = new Vector3(player.transform.position.x, 
-			                                        player.transform.position.y + 5.0f,
+			                                        player.transform.position.y + 1.0f,
 			                                        player.transform.position.z);
+			Vector3 player_temp = player.transform.position;
+			switch (rotateCase)
+			{
+				case 0:
+					player_temp.x -= EPSILON;
+					break;
+				case 1:
+					player_temp.x += EPSILON;
+					break;
+				case 2:
+					player_temp.z -= EPSILON;
+					break;
+				case 3:
+					player_temp.z += EPSILON;
+					break;
+				default:
+					break;
+			}
+			player.transform.position = player_temp;
 			
 			transform.position = temp_pos;
 		}
