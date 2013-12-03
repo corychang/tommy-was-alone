@@ -67,7 +67,7 @@ public class BehaviorScript : MonoBehaviour {
 				acc = behaviorWander(c);
 			} else {
 				//goalRef = player;
-				acc = behaviorSeek(c, player.transform.position);
+				acc = 30.0f * behaviorSeek(c, player.transform.position);
 			}
 		} else {
 			acc = behaviorWander(c);
