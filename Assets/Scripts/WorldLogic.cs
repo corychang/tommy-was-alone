@@ -5,6 +5,8 @@ public class WorldLogic : MonoBehaviour {
 	public float gravity = 20.0f; //universal gravity for the world
 	GameObject player;
 	const float EPSILON = 1.0f;
+	Vector3 playerPositionCache;
+	bool shouldCachePosition = false;
 
 	// Use this for initialization
 	void Start () {
@@ -14,6 +16,11 @@ public class WorldLogic : MonoBehaviour {
 	// Update simply checks the players position. If he's moved "off the cube"
 	// then we rotate the cube by 90 degrees and shift the player
 	void Update () {
+		if(shouldCachePosition)
+		{
+			shouldCachePosition = false;
+			player.transform.position = playerPositionCache;
+		}
 		Vector3 temp_pos = transform.position;
 		int rotateCase = -1;
 		if(player.transform.position.x < transform.position.x - transform.lossyScale.x/2.0f)
@@ -70,6 +77,8 @@ public class WorldLogic : MonoBehaviour {
 					break;
 			}
 			player.transform.position = player_temp;
+			playerPositionCache = player_temp;
+			this.shouldCachePosition = true;
 			
 			transform.position = temp_pos;
 		}
