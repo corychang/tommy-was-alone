@@ -21,8 +21,8 @@ public class BehaviorScript : MonoBehaviour {
 	public const float WANDER_CIRCLE_SCALE = 40.0f;
 	
 	// Public variables
-	public GameObject goalRef = null;
-	public ThirdPersonController leaderController = null;
+	public GameObject player = null;
+	//public GameObject goalRef = null;
 	public ThirdPersonController[] allChars = null;
 	public float maxSpeed = 20.0f;
 	//public int characterNumber = 1;
@@ -52,7 +52,20 @@ public class BehaviorScript : MonoBehaviour {
 	public Vector3 ComputeDesiredVelocity(ThirdPersonController c) {
 		// TODO: This is not the right index right now.
 		oldDirections[c.characterNumber] = c.GetDirection();
-		Vector3 acc = behaviorWander(c);
+		Vector3 acc = Vector3.zero;
+		if (player != null) {
+			Vector3 direction = player.transform.position - c.transform.position;
+			float dotProduct = Vector3.Dot(direction, c.GetDirection());
+			float angle = Mathf.Acos(dotProduct / (direction.magnitude * c.GetDirection().magnitude));
+			if (dotProduct < 0.0f || angle > Mathf.PI / 3.0f) {
+				acc = behaviorWander(c);
+			} else {
+				//goalRef = player;
+				acc = behaviorSeek(c, player.transform.position);
+			}
+		} else {
+			acc = behaviorWander(c);
+		}
 		/*
 		switch (desiredScene) {
 			case LevelConfigurationScript.Scene.Wander:
@@ -148,32 +161,5 @@ public class BehaviorScript : MonoBehaviour {
 		float clampedSpeed = Mathf.Min(rampedSpeed, maxSpeed);
 		Vector3 desiredVelocity = (clampedSpeed / distance) * targetOffset;
 		return desiredVelocity - c.moveSpeed * c.GetDirection();
-	}
-	
-	// Combine separation and arrive behavior to implement flocking.
-	protected Vector3 flock(ThirdPersonController c) {
-		Vector3 separation = Vector3.zero;
-		for (int i = 0; i < allChars.Length; i++) {
-			// Skip comparisons of the same character.
-			if (allChars[i] == c) {
-				continue;
-			}
-			Vector3 displacement = c.transform.position - allChars[i].transform.position;
-			// Only consider nearby characters.
-			if (displacement.magnitude > FLOCK_NEAR_DISTANCE) {
-				continue;
-			}
-			separation += displacement / displacement.sqrMagnitude;
-		}
-		return FLOCK_SCALE * separation + behaviorReachGoal(c, leaderController.transform.position);
-	}
-	
-	// Wander for the leader, flock for everyone else.
-	protected Vector3 behaviorFlockingWander(ThirdPersonController c) {
-		if (leaderController == c)
-			return behaviorWander(c);
-		else {
-			return flock(c);
-		}
 	}
 }
