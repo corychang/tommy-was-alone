@@ -49,6 +49,7 @@
      <Compile Include="Assets\Scripts\BehaviorScript.cs" />
      <Compile Include="Assets\Scripts\MirrorScript.cs" />
      <Compile Include="Assets\Scripts\WorldLogic.cs" />
+     <None Include="Assets\Standard Assets\Skyboxes\_skybox info.txt" />
  <Reference Include="Library\ScriptAssemblies\Assembly-UnityScript-firstpass">
  <HintPath>Library\ScriptAssemblies\Assembly-UnityScript-firstpass.dll</HintPath>
  </Reference>
