@@ -21,7 +21,7 @@ public class BehaviorScript : MonoBehaviour {
 	public const float WANDER_CIRCLE_SCALE = 40.0f;
 	
 	// Public variables
-	public GameObject player = null;
+	public static GameObject player = null;
 	//public GameObject goalRef = null;
 	public ThirdPersonController[] allChars = null;
 	public float maxSpeed = 20.0f;
@@ -30,6 +30,12 @@ public class BehaviorScript : MonoBehaviour {
 	// Private variables
 	// TODO: Set this based on the number of characters on the screen.
 	private Vector3[] oldDirections = new Vector3[1];
+
+	public void Start() {
+		if (player == null) {
+			player = GameObject.Find("Player");
+		}
+	}
 	
 	public void UpdateDesiredVelocity(ThirdPersonController c) {
 		// Run twice to reduce jittering.
