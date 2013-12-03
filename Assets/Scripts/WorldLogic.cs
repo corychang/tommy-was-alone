@@ -18,34 +18,36 @@ public class WorldLogic : MonoBehaviour {
 		int rotateCase = -1;
 		if(player.transform.position.x < transform.position.x - transform.lossyScale.x/2.0f)
 		{
-			this.transform.Rotate(new Vector3(0.0f,0.0f,-90.0f));
+			this.transform.Rotate(new Vector3(0.0f,0.0f,-90.0f), Space.World);
 			//temp_pos.x -= (transform.localScale.x - EPSILON);
-			temp_pos.x -= transform.localScale.x;
+			temp_pos.x -= transform.lossyScale.x;
 			rotateCase = 0;
 		}
 		else if(player.transform.position.x > transform.position.x + transform.lossyScale.x/2.0f)
 		{
-			this.transform.Rotate(new Vector3(0.0f,0.0f,90.0f));
+			this.transform.Rotate(new Vector3(0.0f,0.0f,90.0f), Space.World);
 			//temp_pos.x += (transform.localScale.x - EPSILON);
-			temp_pos.x += transform.localScale.x;
+			temp_pos.x += transform.lossyScale.x;
 			rotateCase = 1;
 		}
 		else if(player.transform.position.z < transform.position.z - transform.lossyScale.z/2.0f)
 		{
-			this.transform.Rotate(new Vector3(90.0f,0.0f,0.0f));
+			this.transform.Rotate(new Vector3(90.0f,0.0f,0.0f), Space.World);
 			//temp_pos.z -= (transform.localScale.z - EPSILON);
-			temp_pos.z -= transform.localScale.z;
+			temp_pos.z -= transform.lossyScale.z;
 			rotateCase = 2;
 		}
 		else if(player.transform.position.z > transform.position.z + transform.lossyScale.z/2.0f)
 		{
-			this.transform.Rotate(new Vector3(-90.0f,0.0f,0.0f));
+			this.transform.Rotate(new Vector3(-90.0f,0.0f,0.0f), Space.World);
 			//temp_pos.z += (transform.localScale.z - EPSILON);
-			temp_pos.z += transform.localScale.z;
+			temp_pos.z += transform.lossyScale.z;
 			rotateCase = 3;
 		}
 		if(rotateCase != -1)
 		{
+			CharacterMotor cm = player.GetComponent<CharacterMotor>();
+			cm.movement.velocity = new Vector3(0.0f,0.0f,0.0f);
 			player.transform.position = new Vector3(player.transform.position.x, 
 			                                        player.transform.position.y + 1.0f,
 			                                        player.transform.position.z);
