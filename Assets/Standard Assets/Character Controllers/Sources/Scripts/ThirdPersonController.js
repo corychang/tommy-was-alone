@@ -44,8 +44,6 @@ var trotAfterSeconds = 3.0;
 
 var canJump = false;
 
-var characterNumber = 1;
-
 private var jumpRepeatTime = 0.05;
 private var jumpTimeout = 0.15;
 private var groundedTimeout = 0.25;

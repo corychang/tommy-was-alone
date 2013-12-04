@@ -22,14 +22,8 @@ public class BehaviorScript : MonoBehaviour {
 	
 	// Public variables
 	public static GameObject player = null;
-	//public GameObject goalRef = null;
-	public ThirdPersonController[] allChars = null;
 	public float maxSpeed = 20.0f;
 	//public int characterNumber = 1;
-	
-	// Private variables
-	// TODO: Set this based on the number of characters on the screen.
-	private Vector3[] oldDirections = new Vector3[1];
 
 	public void Start() {
 		if (player == null) {
@@ -56,8 +50,6 @@ public class BehaviorScript : MonoBehaviour {
 	
 	// Return the seek acceleration.
 	public Vector3 ComputeDesiredVelocity(ThirdPersonController c) {
-		// TODO: This is not the right index right now.
-		oldDirections[c.characterNumber] = c.GetDirection();
 		Vector3 acc = Vector3.zero;
 		if (player != null) {
 			Vector3 direction = player.transform.position - c.transform.position;
@@ -72,29 +64,7 @@ public class BehaviorScript : MonoBehaviour {
 		} else {
 			acc = behaviorWander(c);
 		}
-		/*
-		switch (desiredScene) {
-			case LevelConfigurationScript.Scene.Wander:
-				acc = behaviorWander(c);
-				break;
-			case LevelConfigurationScript.Scene.ReachGoal:
-				acc = behaviorReachGoal(c, goalRef.transform.position);
-				break;
-			case LevelConfigurationScript.Scene.FlockingWander:
-				acc = behaviorFlockingWander(c);
-				break;
-			case LevelConfigurationScript.Scene.Flee:
-				acc = fleeCharacters(c);
-				break;
-			default:
-				acc = new Vector3(0,0,0);
-				break;
-		}
-		*/
 		Vector3 fleeObjs = fleeObjects(c, acc);
-		// Flocking already accounts for separation.
-		//Vector3 fleeChars = desiredScene == LevelConfigurationScript.Scene.FlockingWander ? Vector3.zero : fleeCharacters(c);
-		//acc += FLEE_OBJECT_WEIGHT * fleeObjs + FLEE_CHARACTERS_WEIGHT * fleeChars;
 		acc += FLEE_OBJECT_WEIGHT * fleeObjs;
 		// Prevent accelerations from getting too large.
 		return Mathf.Min(acc.magnitude, ACCELERATION) * acc.normalized;
@@ -114,29 +84,6 @@ public class BehaviorScript : MonoBehaviour {
 			ans = FLEE_OBJECT_SCALE * hit.normal / (hit.distance * hit.distance);
 		}
 		return ans;
-	}
-	
-	// Apply separations on all characters.
-	public Vector3 fleeCharacters(ThirdPersonController c) {
-		Vector3 sum = Vector3.zero;
-		if (allChars == null)
-			return sum;
-		for (int i = 0; i < allChars.Length; i++) {
-			// Skip comparisons of characters with themselves.
-			if (c != allChars[i]) {
-				// Compute time when characters are closest.
-				Vector3 dp = allChars[i].transform.position - c.transform.position;
-				Vector3 dv = oldDirections[i] - oldDirections[c.characterNumber];
-				float t = -Vector3.Dot(dp, dv) / Vector3.Dot(dv, dv);
-				// Only flee for small t.
-				if (t > 0.0f && t < MAX_TIME) {
-					// Run separation.
-					Vector3 displacement = c.transform.position - allChars[i].transform.position;
-					sum += displacement / displacement.sqrMagnitude;
-				}
-			}
-		}
-		return sum;
 	}
 	
 	// Wander steering behavior.
