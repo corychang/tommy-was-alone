@@ -13,6 +13,8 @@ public var runMaxAnimationSpeed : float = 1.0;
 public var jumpAnimationSpeed : float = 1.15;
 public var landAnimationSpeed : float = 1.0;
 
+public var angel : boolean = false;
+
 private var _animation : Animation;
 
 enum CharacterState {
@@ -119,7 +121,11 @@ function Awake ()
 
 function Update() {
 	// Call the UpdateDesiredVelocity method in the Behavior.cs file.
-	var otherScript : Component = gameObject.GetComponent("BehaviorScript");
+	var otherScript : Component;
+	if (angel)
+		otherScript = gameObject.GetComponent("AngelBehaviorScript");
+	else
+		otherScript = gameObject.GetComponent("BehaviorScript");
 	otherScript.UpdateDesiredVelocity(this);
 	
 	// Calculate actual motion

@@ -48,12 +48,13 @@ public class AngelBehaviorScript : MonoBehaviour {
 				newVelocity.y = 0;
 			c.moveSpeed = newVelocity.magnitude;
 			c.SetDirection(newVelocity.normalized);
+		} else {
+			c.moveSpeed = 0.0f;
 		}
 	}
 	
 	// Return the seek acceleration.
 	public Vector3 ComputeDesiredVelocity(ThirdPersonController c) {
-		// TODO: This is not the right index right now.
 		oldDirections[c.characterNumber] = c.GetDirection();
 		Vector3 acc = Vector3.zero;
 		if (player != null) {
@@ -62,7 +63,11 @@ public class AngelBehaviorScript : MonoBehaviour {
 			float dotProduct = Vector3.Dot(direction, player.transform.forward);
 			if (dotProduct < 0.0f) {
 				acc = 30.0f * behaviorSeek(c, player.transform.position);
+			} else {
+				return Vector3.zero;
 			}
+		} else {
+			return Vector3.zero;
 		}
 		Vector3 fleeObjs = fleeObjects(c, acc);
 		// Flocking already accounts for separation.
