@@ -3,12 +3,12 @@ using System.Collections;
 
 public enum WorldSide
 {
-	Side1,
-	Side2,
-	Side3,
-	Side4,
-	Side5,
-	Side6
+	Side1=1,
+	Side2=2,
+	Side3=3,
+	Side4=4,
+	Side5=5,
+	Side6=6
 }
 
 public class WorldLogic : MonoBehaviour {
@@ -25,10 +25,11 @@ public class WorldLogic : MonoBehaviour {
 	const float EPSILON = 1.0f;
 	Vector3 playerPositionCache;
 	bool shouldCachePosition = false;
-	WorldSide currentSide;
+	// Note that this is default to Side1.
+	WorldSide currentSide = WorldSide.Side1;
 	public WorldSide CurrentSide
 	{
-		get {return currentSide;}
+		get { return currentSide; }
 	}
 
 	// Use this for initialization

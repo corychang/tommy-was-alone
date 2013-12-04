@@ -2,17 +2,13 @@
 // Require a character controller to be attached to the same game object
 @script RequireComponent(CharacterController)
 
-public var idleAnimation : AnimationClip;
-public var walkAnimation : AnimationClip;
-public var runAnimation : AnimationClip;
-public var jumpPoseAnimation : AnimationClip;
-
 public var walkMaxAnimationSpeed : float = 0.75;
 public var trotMaxAnimationSpeed : float = 1.0;
 public var runMaxAnimationSpeed : float = 1.0;
 public var jumpAnimationSpeed : float = 1.15;
 public var landAnimationSpeed : float = 1.0;
 
+public var levelNumber : int = 0;
 public var angel : boolean = false;
 
 private var _animation : Animation;
@@ -93,33 +89,22 @@ private var lastGroundedTime = 0.0;
 
 private var isControllable = true;
 
+private var world : GameObject = null;
+
 function Awake ()
 {
 	moveDirection = transform.TransformDirection(Vector3.forward);
 	
-	_animation = GetComponent(Animation);
-	if(!_animation)
-		Debug.Log("The character you would like to control doesn't have animations. Moving her might look weird.");
-	
-	if(!idleAnimation) {
-		_animation = null;
-		Debug.Log("No idle animation found. Turning off animations.");
-	}
-	if(!walkAnimation) {
-		_animation = null;
-		Debug.Log("No walk animation found. Turning off animations.");
-	}
-	if(!runAnimation) {
-		_animation = null;
-		Debug.Log("No run animation found. Turning off animations.");
-	}
-	if(!jumpPoseAnimation && canJump) {
-		_animation = null;
-		Debug.Log("No jump animation found and the character has canJump enabled. Turning off animations.");
-	}
+	world = GameObject.Find("world");
 }	
 
 function Update() {
+	// Don't perform an update if the current side isn't active.
+	var curSide = world.GetComponent("WorldLogic").CurrentSide;
+	if (world.GetComponent("WorldLogic").CurrentSide != levelNumber) {
+		return;
+	}
+
 	// Call the UpdateDesiredVelocity method in the Behavior.cs file.
 	var otherScript : Component;
 	if (angel)
@@ -135,33 +120,6 @@ function Update() {
 	// Move the controller
 	var controller : CharacterController = GetComponent(CharacterController);
 	collisionFlags = controller.Move(movement);
-	
-	// ANIMATION sector
-	if(_animation) {
-		if(controller.velocity.sqrMagnitude < 0.1) {
-			_animation.CrossFade(idleAnimation.name);
-		}
-		else 
-		{
-			if(_characterState == CharacterState.Running) {
-				_animation[runAnimation.name].speed = Mathf.Clamp(controller.velocity.magnitude, 0.0, runMaxAnimationSpeed);
-				_animation.CrossFade(runAnimation.name);	
-			}
-			else if(_characterState == CharacterState.Trotting) {
-				_animation[walkAnimation.name].speed = Mathf.Clamp(controller.velocity.magnitude, 0.0, trotMaxAnimationSpeed);
-				_animation.CrossFade(walkAnimation.name);	
-			}
-			else if(_characterState == CharacterState.Walking) {
-				_animation[walkAnimation.name].speed = Mathf.Clamp(controller.velocity.magnitude, 0.0, walkMaxAnimationSpeed);
-				_animation.CrossFade(walkAnimation.name);	
-			}
-			else if(_characterState == CharacterState.Idle) { //  Start walking again when moving.
-				_animation[walkAnimation.name].speed = Mathf.Clamp(controller.velocity.magnitude, 0.0, walkMaxAnimationSpeed);
-				_animation.CrossFade(walkAnimation.name);
-			}
-		}
-	}
-	// ANIMATION sector
 	
 	// Set rotation to the move direction
 	transform.rotation = Quaternion.LookRotation(moveDirection);
