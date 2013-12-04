@@ -1,12 +1,35 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+public enum WorldSide
+{
+	Side1,
+	Side2,
+	Side3,
+	Side4,
+	Side5,
+	Side6
+}
+
 public class WorldLogic : MonoBehaviour {
+	enum Delta
+	{
+		PosX,
+		NegX,
+		PosZ,
+		NegZ
+	}
+
 	public float gravity = 20.0f; //universal gravity for the world
 	GameObject player;
 	const float EPSILON = 1.0f;
 	Vector3 playerPositionCache;
 	bool shouldCachePosition = false;
+	WorldSide currentSide;
+	public WorldSide CurrentSide
+	{
+		get {return currentSide;}
+	}
 
 	// Use this for initialization
 	void Start () {
@@ -63,15 +86,19 @@ public class WorldLogic : MonoBehaviour {
 			{
 				case 0:
 					player_temp.x -= EPSILON;
+					currentSide = computeNewSide(Delta.NegX);
 					break;
 				case 1:
 					player_temp.x += EPSILON;
+					currentSide = computeNewSide(Delta.PosX);
 					break;
 				case 2:
 					player_temp.z -= EPSILON;
+					currentSide = computeNewSide(Delta.NegZ);
 					break;
 				case 3:
 					player_temp.z += EPSILON;
+					currentSide = computeNewSide(Delta.PosZ);
 					break;
 				default:
 					break;
@@ -82,5 +109,52 @@ public class WorldLogic : MonoBehaviour {
 			
 			transform.position = temp_pos;
 		}
+	}
+	/// <summary>
+	/// Helper to update world side. Exploits the fact that you can only have
+	/// certain transitions based on the structure of the world
+	/// </summary>
+	/// <returns>The rotation.</returns>
+	/// <param name="delta">Delta.</param>
+	WorldSide computeNewSide(Delta delta)
+	{
+		switch(currentSide)
+		{
+		case WorldSide.Side1:
+			if(delta == Delta.PosZ)
+				return WorldSide.Side2;
+			break;
+		case WorldSide.Side2:
+			if(delta == Delta.NegZ)
+				return WorldSide.Side1;
+			if(delta == Delta.PosZ)
+				return WorldSide.Side3;
+			break;
+		case WorldSide.Side3:
+			if(delta == Delta.NegZ)
+				return WorldSide.Side2;
+			if(delta == Delta.PosZ)
+				return WorldSide.Side6;
+			if(delta == Delta.PosX)
+				return WorldSide.Side5;
+			if(delta == Delta.NegX)
+				return WorldSide.Side4;
+			break;
+		case WorldSide.Side4:
+			if(delta == Delta.PosX)
+				return WorldSide.Side3;
+			break;
+		case WorldSide.Side5:
+			if(delta == Delta.NegX)
+				return WorldSide.Side3;
+			break;
+		case WorldSide.Side6:
+			if(delta == Delta.NegZ)
+				return WorldSide.Side3;
+			break;
+		default:
+			throw new UnityException("unknown WorldSide");
+		}
+		throw new UnityException("Invalid transition on cube side");
 	}
 }
