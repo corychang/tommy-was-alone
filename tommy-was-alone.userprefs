@@ -1,9 +1,9 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Release" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/BehaviorScript.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\OutlineSpawner.cs">
     <Files>
-      <File FileName="Assets/Scripts/BehaviorScript.cs" Line="70" Column="19" />
-      <File FileName="Assets/Scripts/BehaviorScript.cs" Line="69" Column="24" />
+      <File FileName="Assets\Scripts\BehaviorScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\OutlineSpawner.cs" Line="32" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
