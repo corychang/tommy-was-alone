@@ -10,6 +10,7 @@ public var landAnimationSpeed : float = 1.0;
 
 public var levelNumber : int = 0;
 public var angel : boolean = false;
+public var boundaryOffset : float = 10.0;
 
 private var _animation : Animation;
 
@@ -114,6 +115,15 @@ function Update() {
 	// Calculate actual motion
 	var movement = moveDirection * moveSpeed + Vector3 (0, verticalSpeed, 0) + inAirVelocity;
 	movement *= Time.deltaTime;
+	
+	var tempPos = movement + this.transform.position;
+	if (tempPos.x > (world.transform.position.x + 100.0 - boundaryOffset) ||
+		tempPos.z > (world.transform.position.z + 100.0 - boundaryOffset) ||
+		tempPos.x < (world.transform.position.x - 100.0 + boundaryOffset) ||
+		tempPos.z < (world.transform.position.z - 100.0 + boundaryOffset)) {
+		transform.rotation = Quaternion.LookRotation(moveDirection);
+		return;	
+	}
 	
 	// Move the controller
 	var controller : CharacterController = GetComponent(CharacterController);
