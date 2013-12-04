@@ -26,7 +26,7 @@ public class WorldLogic : MonoBehaviour {
 	Vector3 playerPositionCache;
 	bool shouldCachePosition = false;
 	// Note that this is default to Side1.
-	WorldSide currentSide = WorldSide.Side5;
+	WorldSide currentSide = WorldSide.Side1;
 	public WorldSide CurrentSide
 	{
 		get { return currentSide; }
