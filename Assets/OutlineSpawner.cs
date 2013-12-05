@@ -3,8 +3,8 @@ using System.Collections;
 
 public class OutlineSpawner : MonoBehaviour {
 	public GameObject outlinePrefab;
-	private int cubeCount = 10;
-	private int cubeScaleJump = 1;
+	private int cubeCount = 20;
+	private int cubeScaleJump = 2;
 	private int cubeScaleInit = 5;
 	private GameObject[] cubes;
 	// Use this for initialization

@@ -42,7 +42,7 @@ public class WorldLogic : MonoBehaviour {
 	}
 
 	// Note that this is default to Side1.
-	WorldSide currentSide = WorldSide.Side6;
+	WorldSide currentSide = WorldSide.Side1;
 	public WorldSide CurrentSide
 	{
 		get { return currentSide; }
