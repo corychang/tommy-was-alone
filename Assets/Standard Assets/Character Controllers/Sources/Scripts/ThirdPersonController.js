@@ -109,10 +109,15 @@ function Update() {
 		return;
 	}
 	
+	var dist = (this.transform.position - player.transform.position).magnitude;
+	
+	if (dist < 5.0) {
+		Application.LoadLevel("cube_world");
+	}
+	
 	// Check to see if the cube is an obstacle.
 	if (obstacle) {
 		var rand = Random.value;
-		var dist = (this.transform.position - player.transform.position).magnitude;
 		// Transform into a zombie.
 		if (dist < 20.0 && rand < 0.5) {
 			obstacle = false;
