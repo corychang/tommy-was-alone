@@ -69,7 +69,7 @@ public class ButtonScript : MonoBehaviour {
 			}
 			GameObject[] button_paths = GameObject.FindGameObjectsWithTag(tag);
 			// now set each item to have the same shader
-			Shader shader = Shader.Find("Particles/Alpha Blended Premultiply");
+			Shader shader = Shader.Find("Self-Illumin/Diffuse");
 			renderer.material.shader = shader;
 			foreach(GameObject path in button_paths)
 			{

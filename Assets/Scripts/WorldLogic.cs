@@ -208,7 +208,7 @@ public class WorldLogic : MonoBehaviour {
 		}
 		if(openDoor)
 		{
-			Shader shader = Shader.Find("Particles/Alpha Blended Premultiply");
+			Shader shader = Shader.Find("Self-Illumin/Diffuse");
 			foreach(GameObject path in GameObject.FindGameObjectsWithTag("maze_entrance"))
 			{
 				path.renderer.material.shader = shader;
