@@ -114,7 +114,7 @@ function Update() {
 		var rand = Random.value;
 		var dist = (this.transform.position - player.transform.position).magnitude;
 		// Transform into a zombie.
-		if (dist < 20.0 && rand < 0.005) {
+		if (dist < 20.0 && rand < 0.5) {
 			obstacle = false;
 			this.renderer.material.SetTexture("_MainTex", texture);
 		} else {
