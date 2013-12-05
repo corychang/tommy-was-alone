@@ -22,7 +22,7 @@ public class WorldLogic : MonoBehaviour {
 
 	public float gravity = 20.0f; //universal gravity for the world
 	GameObject player;
-	const float EPSILON = 1.0f;
+	const float EPSILON = 0.5f;
 	Vector3 playerPositionCache;
 	bool shouldCachePosition = false;
 	bool button1Pressed;
