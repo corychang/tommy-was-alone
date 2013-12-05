@@ -25,6 +25,22 @@ public class WorldLogic : MonoBehaviour {
 	const float EPSILON = 1.0f;
 	Vector3 playerPositionCache;
 	bool shouldCachePosition = false;
+	bool button1Pressed;
+	public bool Button1Pressed
+	{
+		get {return button1Pressed; }
+	}
+	bool button2Pressed;
+	public bool Button2Pressed
+	{
+		get {return button2Pressed; }
+	}
+	bool button3Pressed;
+	public bool Button3Pressed
+	{
+		get {return button3Pressed; }
+	}
+
 	// Note that this is default to Side1.
 	WorldSide currentSide = WorldSide.Side1;
 	public WorldSide CurrentSide
@@ -32,14 +48,27 @@ public class WorldLogic : MonoBehaviour {
 		get { return currentSide; }
 	}
 
+	// logic to transition to endgame
+	bool inEndgame = false;
+	const float totalTransitionTime = 9.0f; //seconds
+	float elapsedTransitionTime = 0.0f;
+
+
+
 	// Use this for initialization
 	void Start () {
+		button1Pressed = button2Pressed = button3Pressed = false;
 		player = GameObject.Find("Player");
 	}
 
 	// Update simply checks the players position. If he's moved "off the cube"
 	// then we rotate the cube by 90 degrees and shift the player
 	void Update () {
+		if(inEndgame)
+		{
+			endGameUpdate();
+			return; //don't do regular update
+		}
 		if(shouldCachePosition)
 		{
 			shouldCachePosition = false;
@@ -157,5 +186,58 @@ public class WorldLogic : MonoBehaviour {
 			throw new UnityException("unknown WorldSide");
 		}
 		throw new UnityException("Invalid transition on cube side");
+	}
+
+	public void registerButtonPress(ButtonID id)
+	{
+		bool openDoor = false;
+		switch(id)
+		{
+		case ButtonID.button1:
+			button1Pressed = true;
+			openDoor = button1Pressed && button2Pressed;
+			break;
+		case ButtonID.button2:
+			button2Pressed = true;
+			openDoor = button1Pressed && button2Pressed;
+			break;
+		case ButtonID.button3:
+			button3Pressed = true;
+			break;
+		}
+		if(openDoor)
+		{
+			Shader shader = Shader.Find("Self-Illumin/Diffuse");
+			foreach(GameObject path in GameObject.FindGameObjectsWithTag("maze_entrance"))
+			{
+				path.renderer.material.shader = shader;
+			}
+			//delete the door so the player can go through
+			GameObject.Destroy(GameObject.Find("maze_door"));
+		}
+		if(button3Pressed)
+		{
+			inEndgame = true;
+			GameObject.Find("AudioManagement").GetComponent<AudioManager>().playSoundEffect(
+				"Sounds/screams");
+			RenderSettings.fog = true;
+			RenderSettings.fogDensity = 0.00f; //fog density will scale from 0.005 to 0.07 quadratically
+		}
+	}
+
+	void endGameUpdate()
+	{
+		elapsedTransitionTime += Time.deltaTime;
+		if(elapsedTransitionTime > totalTransitionTime)
+		{
+			//LOAD NEXT LEVEL
+		}
+		else
+		{
+			// we adjust the fog density using the formula I(t) = a*t^2 + b
+			// where b = 0.05 and a = (0.07 - 0.05)/max_t^2
+			float a = (0.08f)/(totalTransitionTime*totalTransitionTime*totalTransitionTime);
+			RenderSettings.fogDensity = a*elapsedTransitionTime*elapsedTransitionTime*elapsedTransitionTime;
+		}
 	}
 }

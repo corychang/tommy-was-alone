@@ -10,6 +10,9 @@ public var landAnimationSpeed : float = 1.0;
 
 public var levelNumber : int = 0;
 public var angel : boolean = false;
+public var obstacle : boolean = false;
+public var boundaryOffset : float = 10.0;
+public var texture : Texture = null;
 
 private var _animation : Animation;
 
@@ -43,8 +46,6 @@ var rotateSpeed = 500.0;
 var trotAfterSeconds = 3.0;
 
 var canJump = false;
-
-var characterNumber = 1;
 
 private var jumpRepeatTime = 0.05;
 private var jumpTimeout = 0.15;
@@ -91,11 +92,14 @@ private var isControllable = true;
 
 private var world : GameObject = null;
 
+private var player : GameObject = null;
+
 function Awake ()
 {
 	moveDirection = transform.TransformDirection(Vector3.forward);
 	
 	world = GameObject.Find("world");
+	player = GameObject.Find("Player");
 }	
 
 function Update() {
@@ -103,6 +107,19 @@ function Update() {
 	var curSide = world.GetComponent("WorldLogic").CurrentSide;
 	if (world.GetComponent("WorldLogic").CurrentSide != levelNumber) {
 		return;
+	}
+	
+	// Check to see if the cube is an obstacle.
+	if (obstacle) {
+		var rand = Random.value;
+		var dist = (this.transform.position - player.transform.position).magnitude;
+		// Transform into a zombie.
+		if (dist < 20.0 && rand < 0.5) {
+			obstacle = false;
+			this.renderer.material.SetTexture("_MainTex", texture);
+		} else {
+			return;
+		}
 	}
 
 	// Call the UpdateDesiredVelocity method in the Behavior.cs file.
@@ -116,6 +133,15 @@ function Update() {
 	// Calculate actual motion
 	var movement = moveDirection * moveSpeed + Vector3 (0, verticalSpeed, 0) + inAirVelocity;
 	movement *= Time.deltaTime;
+	
+	var tempPos = movement + this.transform.position;
+	if (tempPos.x > (world.transform.position.x + 100.0 - boundaryOffset) ||
+		tempPos.z > (world.transform.position.z + 100.0 - boundaryOffset) ||
+		tempPos.x < (world.transform.position.x - 100.0 + boundaryOffset) ||
+		tempPos.z < (world.transform.position.z - 100.0 + boundaryOffset)) {
+		transform.rotation = Quaternion.LookRotation(moveDirection);
+		return;	
+	}
 	
 	// Move the controller
 	var controller : CharacterController = GetComponent(CharacterController);
