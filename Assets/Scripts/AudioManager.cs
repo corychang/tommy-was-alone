@@ -9,7 +9,9 @@ public class AudioManager : MonoBehaviour {
 	List<GameObject> currentAudioSources;
 	AudioSource musicSource;
 	AudioSource narrationSource;
+	AudioSource soundEffectSource;
 	GameObject player;
+	string current_tag =""; //tag for current sources
 
 	// Use this for initialization
 	void Start () {
@@ -19,6 +21,7 @@ public class AudioManager : MonoBehaviour {
 		musicSource.clip = clip; 
 		musicSource.Play();
 		narrationSource = GameObject.Find("NarrationSource").GetComponent<AudioSource>();
+		soundEffectSource = GameObject.Find("SoundEffectSource").GetComponent<AudioSource>();
 		worldLogic = GameObject.Find("world").GetComponent<WorldLogic>();
 		currentSide = worldLogic.CurrentSide;
 		setNarrationSources();
@@ -33,6 +36,8 @@ public class AudioManager : MonoBehaviour {
 			currentSide = worldLogic.CurrentSide;
 			setNarrationSources(); //update narration sources
 		}
+		if(currentAudioSources.Count == 0)
+			return; //no more update to do
 		// now loop through the narration sources and check to see if we're near any of them
 		// if so, play the appropriate audio
 		GameObject foundNarrationPoint = null;
@@ -60,34 +65,50 @@ public class AudioManager : MonoBehaviour {
 			currentAudioSources.Remove(foundNarrationPoint);
 			GameObject.Destroy(foundNarrationPoint);
 		}
+		if(current_tag == "levelb1" || current_tag == "levelb2")
+		{
+			// special hack for the b1 and b2 case as we have redundant
+			// narration to allow player to do it in any order
+			GameObject.Destroy(currentAudioSources[0]);
+			currentAudioSources.RemoveAt(0);
+		}
 	}
 
 	void setNarrationSources()
 	{
-		string tag;
 		switch(currentSide)
 		{
 		case WorldSide.Side1:
-			tag = "level1";
+			current_tag = "level1";
 			break;
 		case WorldSide.Side2:
-			tag = "level2";
+			current_tag = "level2";
 			break;
 		case WorldSide.Side3:
-			tag = "level3";
+			current_tag = "level3";
+			if(worldLogic.Button1Pressed^worldLogic.Button2Pressed)
+				current_tag = "levelb1";
+			if(worldLogic.Button1Pressed && worldLogic.Button2Pressed)
+				current_tag = "levelb2";
 			break;
 		case WorldSide.Side4:
-			tag = "level4";
+			current_tag = "level4";
 			break;
 		case WorldSide.Side5:
-			tag = "level5";
+			current_tag = "level5";
 			break;
 		case WorldSide.Side6:
-			tag = "level6";
+			current_tag = "level6";
 			break;
 		default:
 			throw new UnityException("Unknown side");
 		}
-		currentAudioSources = new List<GameObject>(GameObject.FindGameObjectsWithTag(tag));
+		currentAudioSources = new List<GameObject>(GameObject.FindGameObjectsWithTag(current_tag));
+	}
+
+	public void playSoundEffect(string effectPath)
+	{
+		soundEffectSource.clip = Resources.Load<AudioClip>(effectPath);
+		soundEffectSource.Play();
 	}
 }
