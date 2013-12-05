@@ -3,7 +3,7 @@ using System.Collections;
 
 public class OutlineSpawner : MonoBehaviour {
 	public GameObject outlinePrefab;
-	private int cubeCount = 3;
+	private int cubeCount = 10;
 	private int cubeScaleJump = 1;
 	private int cubeScaleInit = 5;
 	private GameObject[] cubes;
@@ -25,7 +25,7 @@ public class OutlineSpawner : MonoBehaviour {
 		for (int i = 0; i < cubeCount; i++)
 		{
 			//cubes[i].transform.Rotate (new Vector3(cubeCount - i, 0, 0));
-			cubes[i].transform.Rotate((new Vector3(0,cubeCount -i,0)) * Time.deltaTime * Mathf.Min (Time.realtimeSinceStartup / 10, 1.0f));
+			cubes[i].transform.Rotate((new Vector3(0,cubeCount -i,0)) * (Time.deltaTime) * Mathf.Min ((Time.realtimeSinceStartup - 2.0f) / 10, 1.0f));
 		}
 	}
 }
