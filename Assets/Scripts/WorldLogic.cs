@@ -221,7 +221,12 @@ public class WorldLogic : MonoBehaviour {
 			GameObject.Find("AudioManagement").GetComponent<AudioManager>().playSoundEffect(
 				"Sounds/screams");
 			RenderSettings.fog = true;
-			RenderSettings.fogDensity = 0.00f; //fog density will scale from 0.005 to 0.07 quadratically
+			RenderSettings.fogDensity = 0.00f; 
+			//destroy all enemies
+			foreach(GameObject enemy in GameObject.FindGameObjectsWithTag("enemy"))
+			{
+				GameObject.Destroy(enemy);
+			}
 		}
 	}
 
