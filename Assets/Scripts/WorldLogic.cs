@@ -235,7 +235,7 @@ public class WorldLogic : MonoBehaviour {
 		elapsedTransitionTime += Time.deltaTime;
 		if(elapsedTransitionTime > totalTransitionTime)
 		{
-			//LOAD NEXT LEVEL
+			Application.LoadLevel("endgame");
 		}
 		else
 		{
