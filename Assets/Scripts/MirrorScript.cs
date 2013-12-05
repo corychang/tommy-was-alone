@@ -7,6 +7,7 @@ public class MirrorScript : MonoBehaviour {
 	public Camera zoomOutCamera;
 	public Camera mainCamera;
 	public Light sceneLight;
+	public AudioSource dramaticMusic;
 
 	private Light[] mirrorPieceLights;
 	private int numMirrorsWidth = 12;
@@ -25,7 +26,6 @@ public class MirrorScript : MonoBehaviour {
 		isFading = false;
 		fadeOutScale = 0.0f;
 		mirrorLightFade = 0.0f;
-
 		mirrorPieceLights = gameObject.GetComponentsInChildren<Light>();
 		maxIntensity = mirrorPieceLights[0].intensity;
 	}
@@ -59,6 +59,7 @@ public class MirrorScript : MonoBehaviour {
 			spawnedMirror = true;
 			isFading = true;
 			spawnMirrorPieces();
+			dramaticMusic.Play();
 		}
 
 		if (isFading)
@@ -72,7 +73,7 @@ public class MirrorScript : MonoBehaviour {
 			cameraZoomDelay += Time.deltaTime;
 		}
 
-		if (cameraZoomDelay > 10.0f)
+		if (cameraZoomDelay > 10.6f)
 		{
 
 			zoomOutCamera.depth = 1;
