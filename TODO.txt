@@ -1,0 +1,5 @@
+Things to get got
+
+The entire project minus setting up the repo
+
+merging this pull request
